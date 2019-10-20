@@ -7,7 +7,6 @@ Backtracking line search and fixed step size comparison
 import numpy as np
 from mpl_toolkits.mplot3d import axes3d
 import matplotlib.pyplot as plt
-from matplotlib import cm
 
 ALPHA = 0.5
 BETA = 0.8
