@@ -113,7 +113,7 @@ def plot_lagrange(points, lambdas):
 
 
 def plot_projection(points, outers):
-    fig = plt.figure(figsize=(4, 4))
+    fig = plt.figure(figsize=(4.5, 4))
     ax = fig.add_subplot(111)
     X, Y = np.meshgrid(np.arange(0.0, 1.0, 0.1),
                        np.arange(0.0, 1.0, 0.1))
@@ -123,6 +123,8 @@ def plot_projection(points, outers):
     ax.plot(outers[:, 0], outers[:, 1], color='c')
     ax.set_xlim([0, 0.7])
     ax.set_ylim([0, 0.7])
+    ax.set_xlabel("$x$")
+    ax.set_ylabel("$y$")
     x = np.arange(0, 3)
     y = 1 - x
     ax.plot(x, y, color="red")
