@@ -8,3 +8,4 @@ Assingment of the lecture
 ![augumented](https://github.com/arahatashun/Intelligent-Systems/blob/master/constrained/augmented_lagragian.png)
 ![projected](https://github.com/arahatashun/Intelligent-Systems/blob/master/constrained/projecetd_gradient_descent.png)
 ## 3. Histgram of Chi-squared distribution
+![chisquared](https://github.com/arahatashun/Intelligent-Systems/blob/master/chi-squared/hist.png)
