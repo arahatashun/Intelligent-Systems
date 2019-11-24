@@ -9,3 +9,9 @@ Assingment of the lecture
 ![projected](https://github.com/arahatashun/Intelligent-Systems/blob/master/constrained/projecetd_gradient_descent.png)
 ## 3. Histgram of Chi-squared distribution
 ![chisquared](https://github.com/arahatashun/Intelligent-Systems/blob/master/chi-squared/hist.png)
+## 4. Probability
+### chi^2 distribution
+ <img src="https://github.com/arahatashun/Intelligent-Systems/blob/master/probability/chi_squaredstrong.png" width=50%><img src="https://github.com/arahatashun/Intelligent-Systems/blob/master/probability/chi_squaredcentral.png" width=50%>
+ 
+ ### t distribution
+  <img src="https://github.com/arahatashun/Intelligent-Systems/blob/master/probability/t_diststrong.png" width=50%><img src="https://github.com/arahatashun/Intelligent-Systems/blob/master/probability/t_distcentral.png" width=50%>
