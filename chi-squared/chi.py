@@ -12,7 +12,7 @@ def chi(deg_free):
     :param deg_free:  degree of freedom
     :return:
     """
-    x = np.random.normal(size=[1000, i])
+    x = np.random.normal(size=[1000, deg_free])
     y = np.sum(x * x, axis=1)
     return y
 
