@@ -15,3 +15,10 @@ Assingment of the lecture
  
  ### t distribution
   <img src="https://github.com/arahatashun/Intelligent-Systems/blob/master/probability/t_diststrong.png" width=50%><img src="https://github.com/arahatashun/Intelligent-Systems/blob/master/probability/t_distcentral.png" width=50%>
+
+## 5. Gauusian Kernel
+### 5.1 Linear model
+model selection
+![LM](https://github.com/arahatashun/Intelligent-Systems/blob/master/supervised_learning/ML1-homework1.png)
+### 5.2 Support Vector Machine
+![SVM](https://github.com/arahatashun/Intelligent-Systems/blob/master/supervised_learning/ML1-homework2.png)
