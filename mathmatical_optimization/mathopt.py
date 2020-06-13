@@ -58,6 +58,16 @@ def optimize(xinit, func, grad, optimal_value, iter=100):
 
 
 def optimize_nestrov(xinit, func, grad, optimal_value, L, iter=1000):
+    """ Nesterov's Accelerated Gradient Method
+
+    :param xinit:
+    :param func:
+    :param grad:
+    :param optimal_value:
+    :param L: gradient lipshtiz constant
+    :param iter:
+    :return:
+    """
     xs = []
     fvs = []
     x = xinit
@@ -80,6 +90,12 @@ def optimize_nestrov(xinit, func, grad, optimal_value, L, iter=1000):
 
 
 def convex(m, n):
+    """ minimize
+    || b -A w||_2^2
+    :param m:
+    :param n:
+    :return:
+    """
     assert m < n, "set m < n"
     A = np.random.rand(m, n)
     winit = np.ones((n, 1))
@@ -89,13 +105,13 @@ def convex(m, n):
     wast = np.linalg.pinv(A) @ b
     optimal_value = func(wast)
     L = LA.norm(2 * A.T @ A, 'fro')
-    xs, fvs = optimize_nestrov(winit, func, grad, optimal_value)
+    xs, fvs = optimize_nestrov(winit, func, grad, optimal_value, L)
     plt.plot([i for i in range(len(fvs))], fvs)
     plt.show()
 
 
 def strong_convex(m, n, lamd=1):
-    """
+    """ minimize
     || b - Aw||_2^2 + lamd * ||w||_2^2
     :param m:
     :param n:
@@ -115,5 +131,31 @@ def strong_convex(m, n, lamd=1):
     plt.show()
 
 
+def nonconvex(m, n, l):
+    """ minimize
+    ||b-AW1w2||_2^2
+    W1 n times l
+    w2 l
+    :param m:
+    :param n:
+    :param l:
+    :return:
+    """
+    A = np.random.rand(m, n)
+    w2init = np.ones((l, 1))
+    W1init = np.ones((n, l))
+    b = A @ W1init @ w2init + 0.1 * np.random.rand(m, 1)
+    funcbymat = lambda W1, w2: (b - A @ W1 @ w2).T @ (b - A @ W1 @ w2)
+    gradW1 = lambda W1, w2: -2 * A.T @ (b - A @ W1 @ w2) @ w2.T
+    gradw2 = lambda W1, w2: -2 * W1.T @ A.T @ (b - A @ W1 @ w2)
+    # inorder to optimize
+    func = lambda w: funcbymat(w[:n * l].reshape(n, l), w[n * l:].reshape(l, 1))
+    grad = lambda w: np.concatenate([gradW1(w[:n * l].reshape(n, l), w[n * l:].reshape(l, 1)).flatten(),
+                                    gradw2(w[:n * l].reshape(n, l), w[n * l:].reshape(l, 1)).flatten()])
+    xinit = np.ones(n * l + l)
+    xs, fvs = optimize(xinit, func, grad, 0, iter=100)
+    plt.plot([i for i in range(len(fvs))], fvs)
+    plt.show()
+    
 if __name__ == '__main__':
-    strong_convex(20, 200, 100)
+    nonconvex(20, 200, 10)
