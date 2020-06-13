@@ -22,3 +22,10 @@ model selection
 ![LM](https://github.com/arahatashun/Intelligent-Systems/blob/master/supervised_learning/ML1-homework1.png)
 ### 5.2 Support Vector Machine
 ![SVM](https://github.com/arahatashun/Intelligent-Systems/blob/master/supervised_learning/ML1-homework2.png)
+
+## 6.Clustering
+Iris flower dataset
+### 6.1 Dimension reduction by PCA
+![PCA](https://github.com/arahatashun/Intelligent-Systems/blob/master/clustering/PCA.png)
+### 6.2 kmeans clustring
+![kmeans](https://github.com/arahatashun/Intelligent-Systems/blob/master/clustering/k-means.png)
