@@ -40,13 +40,13 @@ def backtrack(x, func, grad, new_x, d):
     return eps
 
 
-def optimize(xinit, func, grad, optimal_value, metric="fval", lineserch="armijo", L=None, iter=100):
+def optimize(xinit, func, grad, optimal_value, metric="fval", lineserch="armijo", L=None, iter=100, verbose=False):
     xs = []
     fvs = []
     grds = []
     x = xinit
     for i in range(iter):
-        print("iter:", i)
+        if verbose: print("iter:", i)
         xs.append(x)
         fv = func(x).item()
         d = grad(x)
@@ -72,7 +72,7 @@ def optimize(xinit, func, grad, optimal_value, metric="fval", lineserch="armijo"
     return [xs, fvs, grds]
 
 
-def optimize_nestrov(xinit, func, grad, optimal_value, L, iter=1000):
+def optimize_nestrov(xinit, func, grad, optimal_value, L, iter=1000, verbose=False):
     """ Nesterov's Accelerated Gradient Method
 
     :param xinit:
@@ -91,7 +91,7 @@ def optimize_nestrov(xinit, func, grad, optimal_value, L, iter=1000):
     beta = lambda k: k / (k + 3)
     tau = 0
     for i in range(iter):
-        print("iter:", i)
+        if verbose: print("iter:", i)
         xs.append(x)
         fv = func(x).item()
         fvs.append(fv - optimal_value)
@@ -112,6 +112,7 @@ def convex(m, n):
     :return:
     """
     assert m < n, "set m < n"
+    print("problems size: ", n)
     A = np.random.rand(m, n)
     winit = np.ones((n, 1))
     b = A @ winit + 0.1 * np.random.rand(m, 1)
@@ -131,6 +132,7 @@ def strong_convex(m, n, lamd=1.0):
     :param lamd:
     :return:
     """
+    print("problems size: ", n)
     A = np.random.rand(m, n)
     winit = np.ones((n, 1))
     b = A @ winit + 0.1 * np.random.rand(m, 1)
@@ -152,6 +154,7 @@ def nonconvex(m, n, l):
     :param l:
     :return:
     """
+    print("problems size: ", (n + 1) * l)
     A = np.random.rand(m, n)
     w2init = np.ones((l, 1))
     W1init = np.ones((n, l))
@@ -168,33 +171,37 @@ def nonconvex(m, n, l):
 
 
 def problem_one():
-    fig = plt.figure()
-
+    fig = plt.figure(constrained_layout=False)
+    # (b) convex
     ax1 = fig.add_subplot(3, 2, 1)
     ax1.set_title("(b) convex")
-    ax1.set_xlabel('iterations')
+    # ax1.set_xlabel('iterations')
     cvx = convex(10, 100)
     xs, fvs, grds = optimize(cvx["xinit"], cvx["func"], cvx["grad"], cvx["optimality"], lineserch="constant",
                              L=cvx["L"], iter=1000)
     ax1.get_xaxis().get_major_formatter().set_useOffset(False)
     ax1.get_xaxis().set_major_locator(ticker.MaxNLocator(integer=True))
     ax1.plot([i for i in range(len(fvs))], fvs, label="L-constant")
+    # ax12 = ax1.twinx()
+    # ax12.plot([i for i in range(len(fvs))], [1.0/v for v in fvs], label="L-constant")
     xs, fvs, grds = optimize(cvx["xinit"], cvx["func"], cvx["grad"], cvx["optimality"], lineserch="armijo",
                              L=cvx["L"], iter=1000)
     ax1.plot([i for i in range(len(fvs))], fvs, label="armijo")
     ax1.legend()
-
+    # (d) convex +  acceleration
     ax2 = fig.add_subplot(3, 2, 2)
-    ax2.set_xlabel('iterations')
+    # ax2.set_xlabel('iterations')
     ax2.set_title("(d) convex + acceleration")
     xs, fvs = optimize_nestrov(cvx["xinit"], cvx["func"], cvx["grad"], cvx["optimality"], L=cvx["L"], iter=1000)
     ax2.get_xaxis().get_major_formatter().set_useOffset(False)
     ax2.get_xaxis().set_major_locator(ticker.MaxNLocator(integer=True))
     ax2.plot([i for i in range(len(fvs))], fvs, label="L-constant")
+    # ax22 = ax2.twinx()
+    # ax22.plot([i for i in range(len(fvs))], [pow(f, -2) for f in fvs], label="L-constant")
     ax2.legend()
 
     ax3 = fig.add_subplot(3, 2, 3)
-    ax3.set_xlabel('iterations')
+    # ax3.set_xlabel('iterations')
     ax3.set_yscale('log')
     ax3.set_title("(c) strongly convex: $\lambda = 0.1$")
     stcvx = strong_convex(10, 100, lamd=0.1)
@@ -210,7 +217,7 @@ def problem_one():
 
     ax4 = fig.add_subplot(3, 2, 4)
     ax4.set_yscale('log')
-    ax4.set_xlabel('iterations')
+    # ax4.set_xlabel('iterations')
     ax4.set_title("(c) strongly convex: $\lambda = 10$")
     stcvx = strong_convex(10, 100, lamd=10)
     xs, fvs, grds = optimize(stcvx["xinit"], stcvx["func"], stcvx["grad"], stcvx["optimality"], lineserch="constant",
@@ -224,8 +231,8 @@ def problem_one():
     ax4.legend()
 
     ax5 = fig.add_subplot(3, 2, 5)
-    ax5.set_xlabel('iterations')
-    ncvx = nonconvex(5, 3, 2)
+    # ax5.set_xlabel('iterations')
+    ncvx = nonconvex(5, 4, 20)
     xs, fvs, grds = optimize(ncvx["xinit"], ncvx["func"], ncvx["grad"], ncvx["optimality"], metric="grad", iter=1000)
     ax5.set_title("(a) nonconvex")
     ax5.get_xaxis().get_major_formatter().set_useOffset(False)
@@ -233,7 +240,9 @@ def problem_one():
     ax5.set_yscale('log')
     ax5.plot([i for i in range(len(fvs))], grds, label="armijo")
     ax5.legend()
-    plt.savefig("tmp.png")
+
+    plt.tight_layout()
+    plt.savefig("probem1.pdf")
     plt.show()
 
 
