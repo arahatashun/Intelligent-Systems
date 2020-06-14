@@ -29,3 +29,5 @@ Iris flower dataset
 ![PCA](https://github.com/arahatashun/Intelligent-Systems/blob/master/clustering/PCA.png)
 ### 6.2 kmeans clustring
 ![kmeans](https://github.com/arahatashun/Intelligent-Systems/blob/master/clustering/k-means.png)
+
+## 7. Mathematical optimization
