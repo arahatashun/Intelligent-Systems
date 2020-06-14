@@ -8,6 +8,7 @@ import numpy as np
 from numpy import linalg as LA
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
+import time
 
 np.random.seed(0)  # set the random seed for reproducibility
 
@@ -40,7 +41,8 @@ def backtrack(x, func, grad, new_x, d):
     return eps
 
 
-def optimize(xinit, func, grad, optimal_value, metric="fval", lineserch="armijo", L=None, iter=100, verbose=False):
+def optimize(xinit, func, grad, optimal_value, metric="fval", lineserch="armijo", L=None, iter=100, verbose=False,
+             eps_converge=EPS_CONVERGE):
     xs = []
     fvs = []
     grds = []
@@ -57,11 +59,11 @@ def optimize(xinit, func, grad, optimal_value, metric="fval", lineserch="armijo"
             grds.append(min(nd, grds[-1]))
         if metric == "fval":
             fvs.append(fv - optimal_value)
-            if abs(fv - optimal_value) < EPS_CONVERGE:
+            if abs(fv - optimal_value) < eps_converge:
                 return [xs, fvs, grds]
         else:
             fvs.append(fv)
-            if abs(nd - optimal_value) < EPS_CONVERGE:
+            if abs(nd - optimal_value) < eps_converge:
                 return [xs, fvs, grds]
 
         new_x = lambda e: x - e * d
@@ -114,13 +116,15 @@ def convex(m, n):
     assert m < n, "set m < n"
     print("problems size: ", n)
     A = np.random.rand(m, n)
+    A = A.astype(np.float32)
     winit = np.ones((n, 1))
     b = A @ winit + 0.1 * np.random.rand(m, 1)
     func = lambda w: (b - A @ w).T @ (b - A @ w)
     grad = lambda w: 2 * A.T @ (A @ w - b)
     wast = np.linalg.pinv(A) @ b
     optimal_value = func(wast).item()
-    L = LA.norm(2 * A.T @ A, 'fro')
+    L = None
+    # L = LA.norm(2 * A.T @ A, 'fro')
     return {"xinit": winit, "func": func, "grad": grad, "optimality": optimal_value, "L": L}
 
 
@@ -171,7 +175,8 @@ def nonconvex(m, n, l):
 
 
 def problem_one():
-    fig = plt.figure(constrained_layout=False)
+    fig = plt.figure(figsize=(15, 10), constrained_layout=False)
+    plt.subplots_adjust(wspace=0.4, hspace=0.6)
     # (b) convex
     ax1 = fig.add_subplot(3, 2, 1)
     ax1.set_title("(b) convex")
@@ -242,9 +247,37 @@ def problem_one():
     ax5.legend()
 
     plt.tight_layout()
-    plt.savefig("probem1.pdf")
+    plt.savefig("probem1.png")
+    plt.show()
+
+
+def problem_two():
+    # compare cpu time (~300) and epsilon
+    # with convex case by armijo and constant
+    epsilons = [1e-1, 1e-2, 1e-3, 1e-4, 1e-5]
+    dim = 1000000
+    cvx = convex(10, dim)
+    times = list()
+    for eps in epsilons:
+        start = time.time()
+        xs, fvs, grds = optimize(cvx["xinit"][:], cvx["func"], cvx["grad"], cvx["optimality"], lineserch="armijo",
+                                 L=cvx["L"], iter=1000, eps_converge=eps)
+        process_time = time.time() - start
+        times.append(process_time)
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.set_xscale('log')
+    ax.set_xlim(1e-0, 1e-6)
+    ax.set_xlabel(" $\\varepsilon$")
+    ax.set_ylabel("CPU time (sec)")
+    ax.scatter(epsilons, times, label="armijo")
+    ax.legend()
+    plt.title("dimensions: "+str(dim))
+    plt.savefig("probem2.pdf")
+    plt.savefig("probem2.png")
     plt.show()
 
 
 if __name__ == '__main__':
-    problem_one()
+    # problem_one()
+    problem_two()
