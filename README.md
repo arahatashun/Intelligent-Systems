@@ -31,3 +31,4 @@ Iris flower dataset
 ![kmeans](https://github.com/arahatashun/Intelligent-Systems/blob/master/clustering/k-means.png)
 
 ## 7. Mathematical optimization
+![](https://github.com/arahatashun/Intelligent-Systems/blob/master/mathmatical_optimization/probem1.png)
