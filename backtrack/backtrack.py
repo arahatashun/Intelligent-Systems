@@ -33,6 +33,7 @@ def armijo(x, epsilon):
     """
     grad = nabla(x)
     left = object(x - epsilon * grad) - object(x)
+    # - ALPHA * epsilon * epsilon * grad.T @ grad ??
     right = - ALPHA * epsilon * grad.T @ grad
     res = left.item() <= right.item()
     # print("left:", left, "right:", right, "res:", res)
